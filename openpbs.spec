@@ -72,7 +72,7 @@
 %if !%{defined _unitdir}
 %define _unitdir /usr/lib/systemd/system
 %endif
-%if %{_vendor} == debian && %(test -f /etc/os-release && echo 1 || echo 0)
+%if "%{_vendor}" == "debian" && %(test -f /etc/os-release && echo 1 || echo 0)
 %define _vendor_ver %(cat /etc/os-release | awk -F[=\\".] '/^VERSION_ID=/ {print \$3}')
 %define _vendor_id %(cat /etc/os-release | awk -F= '/^ID=/ {print \$2}')
 %endif
