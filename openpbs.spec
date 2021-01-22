@@ -94,11 +94,12 @@ Prefix: %{?pbs_prefix}%{!?pbs_prefix:%{_prefix}}
 
 %bcond_with alps
 %bcond_with ptl
-%if ( 0%{?rhel} >= 8 )
+
+%if 0%{?rhel} >= 8 
 %bcond_without pmix
 %else
 %bcond_with pmix
-%fi
+%endif
 
 BuildRoot: %{buildroot}
 BuildRequires: gcc
