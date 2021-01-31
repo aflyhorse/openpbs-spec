@@ -1,0 +1,64 @@
+--- ../openpbs.spec	2021-01-31 08:46:26.407271800 +0800
++++ openpbs.spec	2021-01-22 19:41:41.870000000 +0800
+@@ -72,11 +72,11 @@
+ %if !%{defined _unitdir}
+ %define _unitdir /usr/lib/systemd/system
+ %endif
+-%if %{_vendor} == debian && %(test -f /etc/os-release && echo 1 || echo 0)
++%if "%{_vendor}" == "debian" && %(test -f /etc/os-release && echo 1 || echo 0)
+ %define _vendor_ver %(cat /etc/os-release | awk -F[=\\".] '/^VERSION_ID=/ {print \$3}')
+ %define _vendor_id %(cat /etc/os-release | awk -F= '/^ID=/ {print \$2}')
+ %endif
+-%if 0%{?suse_version} >= 1210 || 0%{?rhel} >= 7 || (x%{?_vendor_id} == xdebian && 0%{?_vendor_ver} >= 8) || (x%{?_vendor_id} == xubuntu && 0%{?_vendor_ver} >= 16)
++%if ( 0%{?suse_version} >= 1210 ) || ( 0%{?rhel} >= 7 ) || ("x%{?_vendor_id}" == "xdebian" && 0%{?_vendor_ver} >= 8) || ("x%{?_vendor_id}" == "xubuntu" && 0%{?_vendor_ver} >= 16)
+ %define have_systemd 1
+ %endif
+ 
+@@ -85,7 +85,7 @@
+ Name: %{pbs_name}
+ Version: %{pbs_version}
+ Release: %{pbs_release}
+-Source0: %{pbs_dist}
++Source0: https://github.com/openpbs/openpbs/archive/v%{pbs_version}.tar.gz
+ Summary: OpenPBS
+ License: AGPLv3 with exceptions
+ URL: http://www.openpbs.org
+@@ -94,7 +94,12 @@
+ 
+ %bcond_with alps
+ %bcond_with ptl
++
++%if 0%{?rhel} >= 8 
++%bcond_without pmix
++%else
+ %bcond_with pmix
++%endif
+ 
+ BuildRoot: %{buildroot}
+ BuildRequires: gcc
+@@ -119,7 +124,7 @@
+ BuildRequires: swig
+ BuildRequires: zlib-devel
+ %if %{with pmix}
+-BuildRequires: pmix
++BuildRequires: pmix-devel
+ %endif
+ %if %{defined suse_version}
+ BuildRequires: libexpat-devel
+@@ -309,7 +314,7 @@
+ %if 0%{?opensuse_bs}
+ # Do not specify debug_package for OBS builds.
+ %else
+-%if 0%{?suse_version} || x%{?_vendor_id} == xdebian || x%{?_vendor_id} == xubuntu
++%if 0%{?suse_version} || "x%{?_vendor_id}" == "xdebian" || "x%{?_vendor_id}" == "xubuntu"
+ %debug_package
+ %endif
+ %endif
+@@ -622,5 +627,7 @@
+ %endif
+ 
+ %changelog
++* Fri Jan 22 2021 Chen Chen <aflyhorse@hotmail.com> - 20.0.1-0
++- Modify Sources Link
+ * Fri Apr 17 2020 Hiren Vadalia <hiren.vadalia@altair.com> - 1.31
+ - We are not using this changelog, see commit history
