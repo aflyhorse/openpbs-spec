@@ -1,5 +1,5 @@
---- ../openpbs.spec	2021-01-31 08:46:26.407271800 +0800
-+++ openpbs.spec	2021-01-22 19:41:41.870000000 +0800
+--- openpbs.spec	2021-01-31 08:46:26.407271800 +0800
++++ openpbs-new.spec	2021-01-22 19:41:41.870000000 +0800
 @@ -72,11 +72,11 @@
  %if !%{defined _unitdir}
  %define _unitdir /usr/lib/systemd/system
